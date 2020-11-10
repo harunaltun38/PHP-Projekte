@@ -1,5 +1,5 @@
 <?php
-
+namespace galgenmaennchen;
 
 class Galgenmaennchen
 {

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<phpunit bootstrap="C:\xampp2\htdocs\dashboard\galgenMaennchenKata\vendor\autoload.php"
+
+         colors="true"
+         verbose="true"
+         stopOnFailure="true">
+
+    <testsuites>
+        <testsuite name="galgenmaennchen">
+            <directory>C:\xampp2\htdocs\dashboard\galgenMaennchenKata\tests</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
