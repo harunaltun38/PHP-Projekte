@@ -3,7 +3,7 @@
 
 use PHPUnit\Framework\TestCase;
 
-require 'C:\xampp2\htdocs\dashboard\Blumenshop\Tests\blumenshoptests\phpunittests\MockDatabase.php';
+
 
 class BlumenRepositoryTest extends TestCase
 {

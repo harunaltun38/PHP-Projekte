@@ -1,9 +1,15 @@
 <?php
 
+namespace MyBlumenshopApp;
 
-class MockDatabase implements DatabaseInterface
+require_once 'C:\xampp2\htdocs\dashboard\Blumenshop\vendor\autoload.php';
+
+
+use MyBlumenshopApp\Repositories\DatabaseInterface;
+use PDO;
+
+class MySqlDatabase implements DatabaseInterface
 {
-
     private $database = null;
 
     public function __construct()
@@ -24,6 +30,7 @@ class MockDatabase implements DatabaseInterface
     {
         return $this->database->query($sql);
 
+        // return [];
     }
 
 
