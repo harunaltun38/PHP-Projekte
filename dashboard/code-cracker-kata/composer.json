@@ -1,0 +1,10 @@
+{
+  "autoload": {
+    "psr-4": {
+      "codeCracker\\": "C:/xampp2/htdocs/dashboard/code-cracker-kata/src/"
+    }
+  },
+  "require": {
+    "phpunit/phpunit": "9"
+  }
+}
