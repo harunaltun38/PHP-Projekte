@@ -15,20 +15,53 @@ class CodeCrackerTest extends TestCase
         $this->alphabet[] = $code;
     }
 
-    public function testSearchNotFound()
+    public function testSearchForLetterNotFound()
     {
-        $letter = '#';
-
-        self::assertEquals(false, $this->search($letter));
+        self::assertEquals(false, $this->searchForLetter('#'));
     }
 
-    public function testSearchFound()
+    public function testSearchForLetterFound()
     {
-        self::assertEquals(true, $this->search('a'));
+        self::assertEquals(true, $this->searchForLetter('a'));
 
     }
 
-    private function search(string $letter)
+    public function testSearchForCodeFound()
+    {
+
+        self::assertEquals(true, $this->searchForCode('!'));
+    }
+
+    public function testSearchForCodeNotFound()
+    {
+        self::assertEquals(false, $this->searchForCode('_'));
+    }
+
+    public function testEncryptSuccess()
+    {
+
+        self::assertEquals('!', $this->encrypt('a'));
+
+    }
+
+    public function testEncryptFail()
+    {
+        self::assertNotEquals('?', $this->encrypt('a'));
+        self::assertEquals('No code available for this letter', $this->encrypt('+'));
+    }
+
+    public function testDecryptSuccess()
+    {
+        self::assertEquals('a', $this->decrypt('!'));
+    }
+
+    public function testDecryptFail()
+    {
+        self::assertNotEquals('.', $this->decrypt('!'));
+        self::assertEquals('No letter available for this code', $this->decrypt(':'));
+    }
+
+    private function searchForLetter(string $letter)
     {
         foreach ($this->alphabet as $code) {
 
@@ -38,13 +71,42 @@ class CodeCrackerTest extends TestCase
         }
         return false;
     }
-//    private function search(string $buchstabe)
-//    {
-//        foreach ($this->alphabet as $key => $code) {
-//
-//            if ($key === $buchstabe) {
-//                return $code;
-//            }
-//        }
-//    }
+
+    private function searchForCode(string $codeEncrypted)
+    {
+        foreach ($this->alphabet as $code) {
+
+            if ($code->getCode() === $codeEncrypted) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function encrypt(string $letter)
+    {
+        if ($this->searchForLetter($letter)) {
+
+            foreach ($this->alphabet as $code) {
+                if ($code->getLetter() === $letter) {
+                    return $code->getCode();
+                }
+            }
+        }
+        return 'No code available for this letter';
+    }
+
+    private function decrypt(string $decryptCode)
+    {
+        if ($this->searchForCode($decryptCode)) {
+            foreach ($this->alphabet as $code) {
+                if ($code->getCode() === $decryptCode) {
+                    return $code->getLetter();
+                }
+            }
+        }
+        return 'No letter available for this code';
+    }
+
+
 }
