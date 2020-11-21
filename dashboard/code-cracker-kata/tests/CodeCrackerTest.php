@@ -6,13 +6,17 @@ use PHPUnit\Framework\TestCase;
 
 class CodeCrackerTest extends TestCase
 {
-    /* @var  Code[] $alphabet */
-    private $alphabet;
+    /** @var array $alphabetAndCodes */
+    private $alphabetAndCodes = array('a' => '!', 'b' => ')', 'c' => '"', 'd' => '(', 'e' => '£', 'f' => '*', 'g' => '%',
+        'h' => '&', 'i' => '>', 'j' => '<', 'k' => '@', 'l' => 'a', 'm' => 'b', 'n' => 'c', 'o' => 'd', 'p' => 'e',
+        'q' => 'f', 'r' => 'g', 's' => 'h', 't' => 'i', 'u' => 'j', 'v' => 'k', 'w' => 'l', 'x' => 'm', 'y' => 'n', 'z' => 'o');
+
+    /* @var  Code[] $codes */
+    private $codes;
 
     public function setUp(): void
     {
-        $code = new Code('a', '!');
-        $this->alphabet[] = $code;
+        $this->insertCodes();
     }
 
     public function testSearchForLetterNotFound()
@@ -61,11 +65,30 @@ class CodeCrackerTest extends TestCase
         self::assertEquals('No letter available for this code', $this->decrypt(':'));
     }
 
+    public function testEncryptWholeText()
+    {
+        $text = 'HelloWorld';
+
+        self::assertEquals('&£aadldga(', $this->encrypt($text));
+    }
+
+//Methods for Class CodeCracker. Tests are above
+
+    private function insertCodes()
+    {
+        foreach ($this->alphabetAndCodes as $letter => $code) {
+            $code = new Code($letter, $code);
+            $this->codes[] = $code;
+        }
+
+    }
+
     private function searchForLetter(string $letter)
     {
-        foreach ($this->alphabet as $code) {
+        $letterToArray = str_split(strtolower($letter));
+        foreach ($this->codes as $code) {
 
-            if ($code->getLetter() === $letter) {
+            if (in_array($code->getLetter(), $letterToArray)) {
                 return true;
             }
         }
@@ -74,9 +97,10 @@ class CodeCrackerTest extends TestCase
 
     private function searchForCode(string $codeEncrypted)
     {
-        foreach ($this->alphabet as $code) {
+        $codeEncryptedToArray = str_split($codeEncrypted);
+        foreach ($this->codes as $code) {
 
-            if ($code->getCode() === $codeEncrypted) {
+            if (in_array($code->getCode(), $codeEncryptedToArray)) {
                 return true;
             }
         }
@@ -85,25 +109,36 @@ class CodeCrackerTest extends TestCase
 
     private function encrypt(string $letter)
     {
+        $result = [];
         if ($this->searchForLetter($letter)) {
+            $letterToArray = str_split(strtolower($letter));
 
-            foreach ($this->alphabet as $code) {
-                if ($code->getLetter() === $letter) {
-                    return $code->getCode();
+
+            foreach ($letterToArray as $letter) {
+                foreach ($this->alphabetAndCodes as $aac => $code) {
+                    if ($aac === $letter) {
+                        $result[] = $code;
+                    }
                 }
             }
+
+            return implode($result);
         }
         return 'No code available for this letter';
     }
 
     private function decrypt(string $decryptCode)
     {
+        $result = [];
         if ($this->searchForCode($decryptCode)) {
-            foreach ($this->alphabet as $code) {
-                if ($code->getCode() === $decryptCode) {
-                    return $code->getLetter();
+            $decryptCodeToArray = str_split($decryptCode);
+            foreach ($this->codes as $code) {
+
+                if (in_array($code->getCode(), $decryptCodeToArray)) {
+                    $result[] = $code->getLetter();
                 }
             }
+            return implode($result);
         }
         return 'No letter available for this code';
     }
