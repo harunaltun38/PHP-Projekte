@@ -73,16 +73,28 @@ class CodeCracker
     {
         $result = [];
         if ($this->searchForCode($decryptCode)) {
-            $decryptCodeToArray = str_split($decryptCode);
-            foreach ($this->codes as $code) {
+            $decryptCodeToArray = str_split($decryptCode);  // methode auslagern convert special characeters
 
-                if (in_array($code->getCode(), $decryptCodeToArray)) {
-                    $result[] = $code->getLetter();
+            $decryptCodeToArrayUTF8Coded = $this->encodeElementsToUTF_8($decryptCodeToArray);
+            foreach ($decryptCodeToArrayUTF8Coded as $code) {
+                foreach ($this->alphabetAndCodes as $aac => $singlecode) {
+                    if ($singlecode === $code) {
+                        $result[] = $aac;
+                    }
                 }
+
             }
+
             return implode($result);
         }
         return 'No letter available for this code';
     }
 
+    private function encodeElementsToUTF_8(array $array)
+    {
+        foreach ($array as $element) {
+            $decryptCodeToArrayUTF8Coded[] = utf8_encode($element);
+        }
+        return $decryptCodeToArrayUTF8Coded;
+    }
 }
