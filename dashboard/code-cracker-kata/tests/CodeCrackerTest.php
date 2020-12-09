@@ -1,5 +1,8 @@
 <?php
+
 declare(strict_types=1);
+mb_internal_encoding("UTF-8");
+header('Content-type: text/plain; charset=utf-8');
 
 use codeCracker\Code;
 use PHPUnit\Framework\TestCase;
@@ -72,6 +75,12 @@ class CodeCrackerTest extends TestCase
         self::assertEquals('&£aadldga(', $this->encrypt($text));
     }
 
+    public function testDecryptWholeText()
+    {
+        $text = '&£aadldga(';
+        self::assertEquals('helloworld', $this->decrypt($text));
+    }
+
 //Methods for Class CodeCracker. Tests are above
 
     private function insertCodes()
@@ -83,7 +92,7 @@ class CodeCrackerTest extends TestCase
 
     }
 
-    private function searchForLetter(string $letter)
+    private function searchForLetter(string $letter) // pruefe ob überhaupt verschlüsselt werden kann
     {
         $letterToArray = str_split(strtolower($letter));
         foreach ($this->codes as $code) {
@@ -131,17 +140,28 @@ class CodeCrackerTest extends TestCase
     {
         $result = [];
         if ($this->searchForCode($decryptCode)) {
-            $decryptCodeToArray = str_split($decryptCode);
-            foreach ($this->codes as $code) {
+            $decryptCodeToArray = str_split($decryptCode);  // methode auslagern convert special characeters
 
-                if (in_array($code->getCode(), $decryptCodeToArray)) {
-                    $result[] = $code->getLetter();
+            $decryptCodeToArrayUTF8Coded = $this->encodeElementsToUTF_8($decryptCodeToArray);
+            foreach ($decryptCodeToArrayUTF8Coded as $code) {
+                foreach ($this->alphabetAndCodes as $aac => $singlecode) {
+                    if ($singlecode === $code) {
+                        $result[] = $aac;
+                    }
                 }
+
             }
+
             return implode($result);
         }
         return 'No letter available for this code';
     }
 
-
+    private function encodeElementsToUTF_8(array $array)
+    {
+        foreach ($array as $element) {
+            $decryptCodeToArrayUTF8Coded[] = utf8_encode($element);
+        }
+        return $decryptCodeToArrayUTF8Coded;
+    }
 }
